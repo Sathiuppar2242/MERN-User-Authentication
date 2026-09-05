@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, getToken, logoutUser } from "../services/authService";
+import {
+    getCurrentUser,
+    getToken,
+    logoutUser
+} from "../services/authService";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -12,10 +16,11 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             const token = getToken();
+            const apiUrl = import.meta.env.VITE_API_URL;
 
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/users/profile",
+                    `${apiUrl}/users/profile`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
