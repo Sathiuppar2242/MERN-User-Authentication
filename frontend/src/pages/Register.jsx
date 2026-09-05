@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/authService";
 
 const Register = () => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -24,20 +28,9 @@ const Register = () => {
         setError("");
 
         try {
-            const response = await fetch(
-                "http://localhost:5000/api/auth/register",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                }
-            );
+            const data = await registerUser(formData);
 
-            const data = await response.json();
-
-            if (!response.ok) {
+            if (!data.success) {
                 setError(data.message || "Registration failed");
                 return;
             }
@@ -49,6 +42,10 @@ const Register = () => {
                 email: "",
                 password: ""
             });
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 1500);
         } catch (error) {
             setError("Unable to connect to the server");
         }
@@ -75,9 +72,7 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="name">
-                            Name
-                        </label>
+                        <label htmlFor="name">Name</label>
 
                         <input
                             type="text"
@@ -91,9 +86,7 @@ const Register = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="email">
-                            Email
-                        </label>
+                        <label htmlFor="email">Email</label>
 
                         <input
                             type="email"
@@ -107,9 +100,7 @@ const Register = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">
-                            Password
-                        </label>
+                        <label htmlFor="password">Password</label>
 
                         <input
                             type="password"
