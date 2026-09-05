@@ -1,9 +1,44 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, logoutUser } from "../services/authService";
+import { getCurrentUser, getToken, logoutUser } from "../services/authService";
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const user = getCurrentUser();
+
+    const [profile, setProfile] = useState(null);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const token = getToken();
+
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/users/profile",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    logoutUser();
+                    navigate("/login");
+                    return;
+                }
+
+                setProfile(data.user);
+            } catch (error) {
+                setError("Unable to load protected profile");
+            }
+        };
+
+        fetchProfile();
+    }, [navigate]);
 
     const handleLogout = () => {
         logoutUser();
@@ -22,7 +57,17 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                <p>You have successfully logged in.</p>
+                {profile && (
+                    <p>
+                        Authentication verified successfully.
+                    </p>
+                )}
+
+                {error && (
+                    <p className="error-message">
+                        {error}
+                    </p>
+                )}
 
                 <button onClick={handleLogout}>
                     Logout
