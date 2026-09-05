@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/authService";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -20,23 +21,13 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         setError("");
 
         try {
-            const response = await fetch(
-                "http://localhost:5000/api/auth/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                }
-            );
+            const data = await loginUser(formData);
 
-            const data = await response.json();
-
-            if (!response.ok) {
+            if (!data.success) {
                 setError(data.message || "Login failed");
                 return;
             }
@@ -54,6 +45,7 @@ const Login = () => {
         <div className="auth-container">
             <div className="auth-card">
                 <h2>Login</h2>
+
                 <p>Sign in to your account</p>
 
                 {error && (
@@ -64,7 +56,9 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">
+                            Email
+                        </label>
 
                         <input
                             type="email"
@@ -78,7 +72,9 @@ const Login = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">
+                            Password
+                        </label>
 
                         <input
                             type="password"
