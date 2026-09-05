@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
 const Login = () => {
@@ -21,7 +21,6 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setError("");
 
         try {
@@ -56,9 +55,7 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">
-                            Email
-                        </label>
+                        <label htmlFor="email">Email</label>
 
                         <input
                             type="email"
@@ -72,9 +69,7 @@ const Login = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="password">
-                            Password
-                        </label>
+                        <label htmlFor="password">Password</label>
 
                         <input
                             type="password"
@@ -91,6 +86,13 @@ const Login = () => {
                         Login
                     </button>
                 </form>
+
+                <p>
+                    Don't have an account?{" "}
+                    <Link to="/register">
+                        Register
+                    </Link>
+                </p>
             </div>
         </div>
     );
